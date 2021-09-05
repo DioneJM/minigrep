@@ -1,7 +1,6 @@
 use std::fs;
 use std::path::Path;
 use std::error::Error;
-use std::borrow::Borrow;
 
 pub struct Arguments<'a> {
     query: &'a String,
@@ -18,7 +17,7 @@ impl<'a> Arguments<'a> {
         let filename: &String = &args[2];
         let mut flag_one: &String = &String::from("");
 
-        if (args.len() > 3) {
+        if args.len() > 3 {
             flag_one = &args[3];
         }
 
@@ -37,10 +36,6 @@ impl<'a> Arguments<'a> {
 
 pub fn parse_arguments(arguments: Arguments) -> Result<(), Box<dyn Error>> {
     let contents = fs::read_to_string(Path::new(arguments.filename))?;
-    println!("========== Contents ==========");
-    println!("{}", contents);
-    println!("==============================");
-    println!("========== Search Results ==========");
     let search_results = match arguments.case_sensitive {
         true => search(arguments.query, &contents),
         false => search_insensitive(arguments.query, &contents)
@@ -48,7 +43,6 @@ pub fn parse_arguments(arguments: Arguments) -> Result<(), Box<dyn Error>> {
     for line in search_results {
         println!("{}", line);
     }
-    println!("====================================");
     Ok(())
 }
 
